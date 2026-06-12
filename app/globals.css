@@ -1,26 +1,556 @@
 @import "tailwindcss";
 
+/* ─── Design tokens ─────────────────────────────────────────── */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --color-black: #000;
+  --color-white: #fff;
+  --color-img-placeholder: #d5d0cb;
+  --color-img-empty: #ebebeb;
+
+  --header-height: 96px;
+  --header-height-mobile: 64px;
+  --page-px: 20px;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* ─── Reset / base ──────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html, body {
+  height: 100%;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-white);
+  color: var(--color-black);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ─── Header ────────────────────────────────────────────────── */
+.site-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  height: var(--header-height);
+  background: var(--color-white);
+  display: flex;
+  align-items: flex-start;
+  padding: 24px var(--page-px) 8px;
+  gap: 0;
+}
+
+/* Logo */
+.header-logo {
+  display: flex;
+  flex-direction: column;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 14px;
+  letter-spacing: 0;
+  flex-shrink: 0;
+}
+
+/* Primary nav */
+.nav-primary {
+  display: flex;
+  align-items: center;
+  gap: 48px;
+  flex: 1 0 0;
+  min-width: 0;
+  padding-left: 60px;
+  font-size: 11px;
+  letter-spacing: 0.55px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.nav-primary a {
+  font-weight: 400;
+  color: var(--color-black);
+  text-decoration: none;
+}
+
+.nav-primary a.active,
+.nav-primary a[aria-current="page"] {
+  font-weight: 700;
+}
+
+/* Secondary nav */
+.nav-secondary {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+  flex-shrink: 0;
+  font-size: 11px;
+  letter-spacing: 0.55px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.nav-secondary a {
+  font-weight: 400;
+  color: var(--color-black);
+  text-decoration: none;
+}
+
+/* Hamburger (mobile only) */
+.hamburger-btn {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+.hamburger-btn span {
+  display: block;
+  width: 20px;
+  height: 2px;
+  background: var(--color-black);
+}
+
+/* Mobile nav overlay */
+.mobile-nav-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: var(--color-white);
+  display: flex;
+  flex-direction: column;
+  padding: var(--header-height-mobile) var(--page-px) var(--page-px);
+}
+
+.mobile-nav-close {
+  position: absolute;
+  top: 20px;
+  right: var(--page-px);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 24px;
+  line-height: 1;
+  color: var(--color-black);
+}
+
+.mobile-nav-links {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin-top: 40px;
+}
+
+.mobile-nav-links a {
+  font-size: 30px;
+  line-height: 45px;
+  font-weight: 400;
+  color: var(--color-black);
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 0.55px;
+}
+
+.mobile-nav-links a.active {
+  font-weight: 700;
+}
+
+/* ─── Page wrapper ──────────────────────────────────────────── */
+.page-wrap {
+  padding-top: var(--header-height);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.container {
+  padding-left: var(--page-px);
+  padding-right: var(--page-px);
+  width: 100%;
+}
+
+/* ─── Art Index ─────────────────────────────────────────────── */
+.art-index-main {
+  flex: 1;
+  padding: 56px var(--page-px) 80px;
+}
+
+.intro-text {
+  font-size: 34px;
+  font-weight: 400;
+  line-height: 40px;
+  letter-spacing: 0.68px;
+  text-transform: uppercase;
+  max-width: 880px;
+  margin-bottom: 48px;
+}
+
+.section-label {
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: 0.26px;
+  margin-bottom: 32px;
+}
+
+/* Cards grid: 1-col on mobile, 2-col at ≥935px */
+.cards-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 56px;
+}
+
+.cards-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 56px;
+}
+
+/* Card */
+.card {
+  display: flex;
+  flex-direction: column;
+}
+
+.card-header {
+  display: flex;
+  flex-direction: column;
+}
+
+.card-title {
+  font-size: 34px;
+  font-weight: 700;
+  line-height: 36px;
+  letter-spacing: 0.34px;
+  text-transform: uppercase;
+  color: var(--color-black);
+}
+
+.card-subtitle {
+  font-size: 34px;
+  font-weight: 400;
+  line-height: 36px;
+  letter-spacing: 0.34px;
+  text-transform: uppercase;
+  color: var(--color-black);
+}
+
+.card-img-wrap {
+  margin-top: 16px;
+  width: 100%;
+  aspect-ratio: 690 / 521;
+  background: var(--color-img-empty);
+  overflow: hidden;
+}
+
+.card-img-wrap.has-image {
+  background: var(--color-img-placeholder);
+}
+
+.card-img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.card-schedule {
+  margin-top: 16px;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 18px;
+  letter-spacing: 0.28px;
+  color: var(--color-black);
+}
+
+.card a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* ─── Art Detail ────────────────────────────────────────────── */
+.detail-section {
+  flex: 1;
+  padding: 0 var(--page-px) 80px;
+}
+
+.detail-title-block {
+  padding-top: 20px;
+  padding-bottom: 50px;
+}
+
+.detail-h1 {
+  font-size: 57px;
+  font-weight: 700;
+  line-height: 58px;
+  letter-spacing: 0.57px;
+  text-transform: uppercase;
+  color: var(--color-black);
+}
+
+.detail-h2 {
+  font-size: 57px;
+  font-weight: 400;
+  line-height: 58px;
+  letter-spacing: 0.57px;
+  text-transform: uppercase;
+  color: var(--color-black);
+}
+
+/* Detail grid: single-col mobile, 12-col at ≥935px */
+.detail-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.detail-col-meta {
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 16px;
+  letter-spacing: 0.32px;
+  color: var(--color-black);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.detail-col-desc {
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 16px;
+  letter-spacing: 0.32px;
+  color: var(--color-black);
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.detail-col-images {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.detail-image-wrap {
+  width: 100%;
+  background: var(--color-img-placeholder);
+  overflow: hidden;
+}
+
+.detail-image-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Mobile image slider */
+.detail-image-slider {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  gap: 8px;
+  margin-left: calc(-1 * var(--page-px));
+  margin-right: calc(-1 * var(--page-px));
+  padding-left: var(--page-px);
+  padding-right: var(--page-px);
+  scrollbar-width: none;
+}
+
+.detail-image-slider::-webkit-scrollbar {
+  display: none;
+}
+
+.detail-image-slider .detail-image-wrap {
+  flex-shrink: 0;
+  width: calc(100vw - 2 * var(--page-px));
+  aspect-ratio: 1 / 1;
+  scroll-snap-align: start;
+}
+
+/* ─── Footer ────────────────────────────────────────────────── */
+.site-footer {
+  background: var(--color-white);
+  padding: 10px var(--page-px) 20px;
+  min-height: 370px;
+}
+
+.footer-inner {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  height: 100%;
+  min-height: 340px;
+}
+
+.footer-logo {
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 13px;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--color-black);
+}
+
+.footer-contact {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 11px;
+  line-height: 16px;
+  letter-spacing: 0.55px;
+  text-transform: uppercase;
+  color: var(--color-black);
+  margin-top: 48px;
+}
+
+.footer-contact a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.footer-contact .instagram {
+  font-weight: 700;
+}
+
+.footer-contact .email {
+  font-weight: 400;
+}
+
+.footer-legal {
+  display: flex;
+  flex-direction: column;
+  font-size: 11px;
+  line-height: 16px;
+  letter-spacing: 0.55px;
+  text-transform: uppercase;
+  color: var(--color-black);
+  font-weight: 400;
+}
+
+/* ─── Detail description show/hide ─────────────────────────── */
+.detail-desc-mobile {
+  display: block;
+}
+
+.detail-desc-desktop {
+  display: none;
+}
+
+/* ─── Responsive breakpoints ────────────────────────────────── */
+
+/* ≥935px: 2-column card grid + desktop nav */
+@media (min-width: 935px) {
+  .cards-row {
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  .detail-grid {
+    display: grid;
+    grid-template-columns: 216px 334px 1fr;
+    gap: 20px;
+    align-items: start;
+  }
+
+  .detail-image-slider {
+    display: flex;
+    flex-direction: column;
+    overflow-x: visible;
+    margin-left: 0;
+    margin-right: 0;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .detail-image-slider .detail-image-wrap {
+    width: 100%;
+    aspect-ratio: auto;
+    height: 640px;
+    scroll-snap-align: unset;
+  }
+
+  /* hide hamburger, show nav */
+  .hamburger-btn {
+    display: none !important;
+  }
+
+  .site-header {
+    height: var(--header-height);
+  }
+
+  /* show description in grid column on desktop, hide below-images version */
+  .detail-desc-desktop {
+    display: flex;
+  }
+
+  .detail-desc-mobile {
+    display: none;
+  }
+}
+
+/* <935px: mobile layout */
+@media (max-width: 934px) {
+  .site-header {
+    height: var(--header-height-mobile);
+    padding-top: 16px;
+    padding-bottom: 8px;
+    align-items: center;
+  }
+
+  .page-wrap {
+    padding-top: var(--header-height-mobile);
+  }
+
+  .nav-primary,
+  .nav-secondary {
+    display: none;
+  }
+
+  .hamburger-btn {
+    display: flex;
+  }
+
+  .intro-text {
+    font-size: 26px;
+    line-height: 32px;
+  }
+
+  .detail-h1,
+  .detail-h2 {
+    font-size: 36px;
+    line-height: 42px;
+  }
+
+  .site-footer {
+    min-height: 370px;
+  }
+
+  /* Mobile footer: stacked */
+  .footer-inner {
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 0;
+  }
+
+  .footer-legal {
+    margin-top: 32px;
+    text-align: left;
+  }
+}
+
+/* ≥1200px: cards in 2-col layout with image+content side by side */
+@media (min-width: 1200px) {
+  .card-img-wrap {
+    aspect-ratio: 810 / 640;
+  }
 }
