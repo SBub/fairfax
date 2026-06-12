@@ -13,17 +13,15 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: "Fairfax Dorn Projects",
-  description: "FDP specializes in curation and exhibition, bringing expertise to a diverse range of talent.",
+  description: "Fairfax Dorn Projects",
 }
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode
-}>) {
+}: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className={inter.variable}>
-      <body style={{ fontFamily: "var(--font-inter), Inter, sans-serif" }}>
+      <body>
         <Header />
         {children}
         <Footer />

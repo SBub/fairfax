@@ -23,65 +23,92 @@ export default async function ArtDetailPage({ params }: Props) {
   const { slug } = await params
   const exhibition = getExhibition(slug)
 
-  if (!exhibition) {
-    notFound()
-  }
+  if (!exhibition) notFound()
+
+  const imageCount = exhibition.description.length > 0 ? 3 : 2
 
   return (
-    <div className="page-wrap">
-      <main className="detail-section">
-        {/* Sticky title block */}
-        <div className="detail-title-block">
-          <h1 className="detail-h1">{exhibition.title}</h1>
-          <p className="detail-h2">{exhibition.subtitle}</p>
+    <div className="pt-16 desk:pt-24">
+      {/* Detail section */}
+      <main className="pb-20 px-5">
+        {/* Title block */}
+        <div className="pt-6 desk:pt-5">
+          <p className="text-[38px] desk:text-[57px] font-bold leading-[40px] desk:leading-[58px] tracking-[0.57px]">
+            {exhibition.title}
+          </p>
+          <p className="text-[38px] desk:text-[57px] font-normal leading-[40px] desk:leading-[58px] tracking-[0.57px]">
+            {exhibition.subtitle}
+          </p>
+          <div className="h-8 desk:h-[50px]" />
         </div>
 
-        {/* Detail grid */}
-        <div className="detail-grid">
-          {/* Meta column */}
-          <div className="detail-col-meta">
-            {exhibition.dates.map((line, i) => (
-              <p key={i}>{line}</p>
-            ))}
+        {/* Mobile layout */}
+        <div className="desk:hidden">
+          {/* Meta */}
+          <div className="flex flex-col gap-4 text-[13px] font-normal leading-[16px] tracking-[0.32px]">
+            <div>
+              <p>{exhibition.dateStart}</p>
+              {exhibition.dateEnd && <p>– {exhibition.dateEnd}</p>}
+            </div>
+            <p>{exhibition.location}</p>
             {exhibition.time && <p>{exhibition.time}</p>}
           </div>
 
-          {/* Description column — desktop shows here, mobile shows below images */}
-          <div className="detail-col-desc detail-desc-desktop">
-            {exhibition.description.map((para, i) => (
-              <p key={i}>{para}</p>
+          <div className="h-8" />
+
+          {/* Image slider */}
+          <div
+            className="flex overflow-x-auto gap-2 h-[350px]"
+            style={{ scrollSnapType: "x mandatory", WebkitOverflowScrolling: "touch" }}
+          >
+            {Array.from({ length: imageCount }).map((_, i) => (
+              <div
+                key={i}
+                className="w-[350px] h-[350px] shrink-0 bg-[#d5d0cb]"
+                style={{ scrollSnapAlign: "start" }}
+              />
             ))}
           </div>
 
-          {/* Images column */}
-          <div className="detail-col-images">
-            {/* Mobile: horizontal scroll slider */}
-            <div className="detail-image-slider">
-              {exhibition.images.length > 0 ? (
-                exhibition.images.map((src, i) => (
-                  <div className="detail-image-wrap" key={i}>
-                    <img
-                      src={src}
-                      alt={`${exhibition.title} — ${exhibition.subtitle}, image ${i + 1}`}
-                      loading={i === 0 ? "eager" : "lazy"}
-                    />
-                  </div>
-                ))
-              ) : (
-                <>
-                  <div className="detail-image-wrap" style={{ height: "640px" }} />
-                  <div className="detail-image-wrap" style={{ height: "640px" }} />
-                </>
-              )}
+          <div className="h-8" />
+
+          {/* Description */}
+          {exhibition.description.length > 0 && (
+            <div className="flex flex-col gap-6 text-[13px] font-normal leading-[16px] tracking-[0.32px]">
+              {exhibition.description.map((para, i) => (
+                <p key={i}>{para}</p>
+              ))}
             </div>
-          </div>
+          )}
         </div>
 
-        {/* Description — mobile only, shown below images */}
-        <div className="detail-col-desc detail-desc-mobile" style={{ marginTop: "32px" }}>
-          {exhibition.description.map((para, i) => (
-            <p key={i}>{para}</p>
-          ))}
+        {/* Desktop layout */}
+        <div className="hidden desk:flex desk:gap-5 desk:items-start">
+          {/* Meta column */}
+          <div className="w-[216px] shrink-0 flex flex-col gap-4 text-[13px] font-normal leading-[16px] tracking-[0.32px]">
+            <div>
+              <p>{exhibition.dateStart}</p>
+              {exhibition.dateEnd && <p>– {exhibition.dateEnd}</p>}
+            </div>
+            <p>{exhibition.location}</p>
+            {exhibition.time && <p>{exhibition.time}</p>}
+          </div>
+
+          {/* Description column */}
+          {exhibition.description.length > 0 && (
+            <div className="w-[334px] shrink-0 flex flex-col gap-6 text-[13px] font-normal leading-[16px] tracking-[0.32px]">
+              {exhibition.description.map((para, i) => (
+                <p key={i}>{para}</p>
+              ))}
+            </div>
+          )}
+
+          {/* Images column */}
+          <div className="flex-1 flex flex-col gap-5">
+            {Array.from({ length: imageCount }).map((_, i) => (
+              <div key={i} className="w-full h-[640px] bg-[#d5d0cb]" />
+            ))}
+          </div>
         </div>
       </main>
     </div>
